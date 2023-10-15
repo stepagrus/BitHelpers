@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitHelpers", "BitHelpers\BitHelpers.csproj", "{5D88A731-CB38-4F12-B4AD-B8976B9B9CAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitHelpers", "BitHelpers\BitHelpers.csproj", "{5D88A731-CB38-4F12-B4AD-B8976B9B9CAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitHelpers.Tests", "BitHelpers.Tests\BitHelpers.Tests.csproj", "{490E3FB9-6650-48A2-8A59-1EAFF02D3FB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitHelpers.Tests", "BitHelpers.Tests\BitHelpers.Tests.csproj", "{490E3FB9-6650-48A2-8A59-1EAFF02D3FB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitHelpers.Benchmarks", "BitHelpers.Benchmarks\BitHelpers.Benchmarks.csproj", "{C42438A6-7C35-4798-B8C3-B5621EBF62C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitHelpers.Benchmarks", "BitHelpers.Benchmarks\BitHelpers.Benchmarks.csproj", "{C42438A6-7C35-4798-B8C3-B5621EBF62C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C55A048D-5663-4E7C-9F4D-866DE341349C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

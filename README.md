@@ -1,8 +1,11 @@
 # BitHelpers
 
-Target platform: .NET 6
+BitHelpers - Is the fast and zero-heap-allocation (where possible) library for bit/byte/hex conversions.
 
-**EndianBitConverter** - Converts an array of bytes to numeric values and vice versa.
+Target platform: .NET 7
+
+**BigEndianConverter** and **LittleEndianCovnerter** - Converts an span of bytes to numeric values and vice versa.
+Is zero-heap-allocation.
 
 **HexHelper** - Converts byte arrays to hexadecimal string and vice versa.
 
