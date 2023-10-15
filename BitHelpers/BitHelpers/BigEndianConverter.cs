@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
+using Resx = BitHelpers.Properties.Resources;
 
 namespace BitHelpers;
 
@@ -9,19 +10,17 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static byte ToByte(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length == 0)
-      throw new ArgumentException($"{nameof(buffer)} is too small");
-    if (offset < 0 || offset >= buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), "is out of range");
+    CheckBoundaries(buffer, offset, sizeof(byte));
 
-    return buffer[offset];
+    var value = buffer[offset];
+    offset += sizeof(byte);
+    return value;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static byte ToByte(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < 1)
-      throw new ArgumentException($"{nameof(buffer)} is too small");
+    CheckBoundaries(buffer, sizeof(byte));
 
     return buffer[0];
   }
@@ -29,19 +28,17 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static sbyte ToSByte(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length == 0)
-      throw new ArgumentException($"{nameof(buffer)} is empty");
-    if (offset < 0 || offset >= buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), $"is out of range");
+    CheckBoundaries(buffer, offset, sizeof(sbyte));
 
-    return (sbyte)buffer[offset];
+    var value = (sbyte)buffer[offset];
+    offset += sizeof(sbyte);
+    return value;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static sbyte ToSByte(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < 1)
-      throw new ArgumentException($"buffer is too small");
+    CheckBoundaries(buffer, sizeof(sbyte));
 
     return (sbyte)buffer[0];
   }
@@ -49,25 +46,19 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static ushort ToUInt16(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length < sizeof(ushort))
-      throw new ArgumentException($"{nameof(buffer)} is too small");
-
-    var newOffset = offset + sizeof(ushort);
-    if (offset < 0 || newOffset > buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), $"is out of range");
+    CheckBoundaries(buffer, offset, sizeof(ushort));
 
     var value = (ushort)
       (buffer[offset + 0] << 8 |
       buffer[offset + 1] << 0);
-    offset = newOffset;
+    offset += sizeof(ushort);
     return value;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static ushort ToUInt16(ReadOnlySpan<byte> buffer)
   {
-    if (sizeof(ushort) > buffer.Length)
-      throw new ArgumentException("buffer length is too small");
+    CheckBoundaries(buffer, sizeof(ushort));
 
     return (ushort)(
       buffer[0] << 8 |
@@ -89,12 +80,7 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static uint ToUInt32(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length < sizeof(uint))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
-
-    var newOffset = offset + sizeof(uint);
-    if (offset < 0 || newOffset > buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), $"is out of range");
+    CheckBoundaries(buffer, offset, sizeof(uint));
 
     var value = (uint)(
       buffer[offset + 0] << 24 |
@@ -102,15 +88,14 @@ public class BigEndianConverter : IByteConverter
       buffer[offset + 2] << 8 |
       buffer[offset + 3] << 0
       );
-    offset = newOffset;
+    offset += sizeof(uint);
     return value;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static uint ToUInt32(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < sizeof(uint))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
+    CheckBoundaries(buffer, sizeof(uint));
 
     return (uint)(
       buffer[0] << 24 |
@@ -135,12 +120,7 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static ulong ToUInt64(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length < sizeof(ulong))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
-
-    var newOffset = offset + sizeof(ulong);
-    if (offset < 0 || newOffset > buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), "is out of range");
+    CheckBoundaries(buffer, offset, sizeof(ulong));
 
     var value =
       (ulong)buffer[offset + 0] << 56 |
@@ -152,15 +132,14 @@ public class BigEndianConverter : IByteConverter
       (ulong)buffer[offset + 6] << 8 |
       (ulong)buffer[offset + 7] << 0
       ;
-    offset = newOffset;
+    offset += sizeof(ulong);
     return value;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static ulong ToUInt64(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < sizeof(ulong))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
+    CheckBoundaries(buffer, sizeof(ulong));
 
     return
       (ulong)buffer[0] << 56 |
@@ -189,11 +168,7 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static UInt128 ToUInt128(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length < SizeOfInt128)
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
-
-    if (offset < 0 || offset + SizeOfInt128 > buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), "is out of range");
+    CheckBoundaries(buffer, offset, SizeOfInt128);
 
     var newOffset = offset;
     var upper = ToUInt64(buffer, ref newOffset);
@@ -205,8 +180,7 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static UInt128 ToUInt128(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < SizeOfInt128)
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
+    CheckBoundaries(buffer, SizeOfInt128);
 
     var upper = ToUInt64(buffer);
     var lower = ToUInt64(buffer.Slice(8, 8));
@@ -216,7 +190,7 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Int128 ToInt128(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    return (Int128) ToUInt128(buffer, ref offset);
+    return (Int128)ToUInt128(buffer, ref offset);
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -228,25 +202,17 @@ public class BigEndianConverter : IByteConverter
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static float ToFloat(ReadOnlySpan<byte> buffer, ref int offset)
   {
-    if (buffer.Length < sizeof(float))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
+    CheckBoundaries(buffer, offset, sizeof(float));
 
-    var newOffset = offset + sizeof(float);
-    if (offset < 0 || newOffset > buffer.Length)
-      throw new ArgumentOutOfRangeException(nameof(offset), "is out of range");
-
-    var i = ToUInt32(buffer, ref offset);
-    return InternalConverter.UInt32ToFloat(i);
+    return InternalConverter.UInt32ToFloat(ToUInt32(buffer, ref offset));
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static float ToFloat(ReadOnlySpan<byte> buffer)
   {
-    if (buffer.Length < sizeof(float))
-      throw new ArgumentException($"{nameof(buffer)} length is too small");
+    CheckBoundaries(buffer, sizeof(float));
 
     return InternalConverter.UInt32ToFloat(ToUInt32(buffer));
-
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -343,6 +309,23 @@ public class BigEndianConverter : IByteConverter
   public static void Write(decimal value, Span<byte> toBuffer, ref int offset)
   {
     throw new NotImplementedException();
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  private static void CheckBoundaries(ReadOnlySpan<byte> buffer, int offset, int valueSize)
+  {
+    if (buffer.Length < valueSize)
+      throw new ArgumentException(Resx.buffer_is_too_small);
+
+    if (offset < 0 || offset + valueSize > buffer.Length)
+      throw new ArgumentOutOfRangeException(nameof(offset), Resx.is_out_of_range);
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  private static void CheckBoundaries(ReadOnlySpan<byte> buffer, int valueSize)
+  {
+    if (buffer.Length < valueSize)
+      throw new ArgumentException(Resx.buffer_is_too_small);
   }
 
   private const int SizeOfInt128 = 16;

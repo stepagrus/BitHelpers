@@ -12,14 +12,14 @@
 
     private static readonly object[] read_value_args = new object[]
     {
-      new object[] { new byte[] { 255, 7, 254 }, 0, (sbyte) -1 },
-      new object[] { new byte[] { 255, 7, 254 }, 1, (sbyte) 7 },
-      new object[] { new byte[] { 255, 7, 254 }, 2, (sbyte) -2 },
+      new object[] { new byte[] { 255, 7, 254 }, (sbyte) -1 },
+      new object[] { new byte[] { 7, 254 }, (sbyte) 7 },
+      new object[] { new byte[] { 254, 255, 7}, (sbyte) -2 },
     };
     [TestCaseSource(nameof(read_value_args))]
-    public void read_value(byte[] bytes, int offset, sbyte expected)
+    public void read_value(byte[] bytes, sbyte expected)
     {
-      var value = BigEndianConverter.ToSByte(bytes, ref offset);
+      var value = BigEndianConverter.ToSByte(bytes);
 
       Assert.That(value, Is.EqualTo(expected));
     }

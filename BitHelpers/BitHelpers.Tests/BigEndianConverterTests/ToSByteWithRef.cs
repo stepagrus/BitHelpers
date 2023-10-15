@@ -30,9 +30,11 @@ namespace BitHelpers.Tests.BigEndianConverterTests
     [TestCaseSource(nameof(read_value_args))]
     public void read_value(byte[] bytes, int offset, sbyte expected)
     {
-      var value = BigEndianConverter.ToSByte(bytes, ref offset);
+      var newOffset = offset;
+      var value = BigEndianConverter.ToSByte(bytes, ref newOffset);
 
       Assert.That(value, Is.EqualTo(expected));
+      Assert.That(newOffset, Is.EqualTo(offset + sizeof(sbyte)));
     }
   }
 }
