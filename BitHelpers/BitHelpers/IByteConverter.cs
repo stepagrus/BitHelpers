@@ -1,4 +1,4 @@
-﻿namespace BitHelpers
+namespace BitHelpers
 {
   internal interface IByteConverter
   {
@@ -36,10 +36,35 @@
     static abstract UInt128 ToUInt128(ReadOnlySpan<byte> buffer);
     static abstract Int128 ToInt128(ReadOnlySpan<byte> buffer, ref int offset);
     static abstract Int128 ToInt128(ReadOnlySpan<byte> buffer);
-    static abstract float ToFloat(ReadOnlySpan<byte> buffer, ref int offset);
-    static abstract float ToFloat(ReadOnlySpan<byte> buffer);
-    static abstract double ToDouble(ReadOnlySpan<byte> buffer, ref int offset);
-    static abstract double ToDouble(ReadOnlySpan<byte> buffer);
+
+		/// <summary>
+		/// IEC 60559:1989 (IEEE 754)
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <param name="offset"></param>
+		/// <returns></returns>
+		static abstract float ToFloat(ReadOnlySpan<byte> buffer, ref int offset);
+
+		/// <summary>
+		/// IEC 60559:1989 (IEEE 754)
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <returns></returns>
+		static abstract float ToFloat(ReadOnlySpan<byte> buffer);
+
+		/// <summary>
+		/// IEC 60559:1989 (IEEE 754)
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <param name="offset"></param>
+		/// <returns></returns>
+		static abstract double ToDouble(ReadOnlySpan<byte> buffer, ref int offset);
+		/// <summary>
+		/// IEC 60559:1989 (IEEE 754)
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <returns></returns>
+		static abstract double ToDouble(ReadOnlySpan<byte> buffer);
     static abstract decimal ToDecimal(ReadOnlySpan<byte> buffer, ref int offset);
     static abstract decimal ToDecimal(ReadOnlySpan<byte> buffer);
   }
